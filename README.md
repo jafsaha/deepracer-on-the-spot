@@ -7,7 +7,9 @@ Training on an EC2 has many advantages:
 <li>Ability to increment your training
 <li>Improved log analysis tools
 <li>Train as multiple models at once on different EC2 instances
-<li>Reduced cost: $0.22/hour (when using g4dn.2xlarge spot instance, or $0.75/hr when using on demand instance https://aws.amazon.com/ec2/pricing/on-demand/) cost of training versus $3.50/hour on amazon console
+<li>Reduced cost: $0.22/hour (when using g4dn.2xlarge spot instance, or $0.75/hr when using on demand instance https://aws.amazon.com/ec2/pricing/on-demand/) cost of training versus $3.50/hour on the Amazon console.  
+
+Check the latest spot pricing for suitable GPU instances via this [automated price checker](spot_info.md)
 
 ## Architectural Overview
 
@@ -122,6 +124,14 @@ To use cd into scripts directory and run `./create-image-builder.sh <base resour
 ## delete-base-resources.sh
 
 This script can be used to delete the resources created by the create-base-resources.sh script (and associated template). Please be aware that the resource deletion will fail if the S3 bucket created is not empty. delete-base-resources.sh takes a single mandatory parameter, the stack-name, same value as above.
+
+## get-spot-prices.sh
+
+This script will check the prices of g4dn, g5, g6 and g6e instances of sizes 2xlarge, 4xlarge and 8xlarge in every AWS region and return the results.  By default it won't filter the results and will show them ordered by PricePerWorkerHour (i.e. instance price per hour divided by the suggested number of workers the instance can host).  Using the --help parameter will show supported values for optional parameters.--sort_order can change the order you sort the list by to alternative values, e.g. 'SpotPrice' and --interruption_filter allows you to filter the list, for example if you only want to see instances with an interruption frequency of '<5%'.  to learn more about interruption frequency visit the [AWS Spot Instance Advisor](https://aws.amazon.com/ec2/spot/instance-advisor/)
+
+To use cd into scripts directory and run `./get-spot-prices.sh --sort_order '<SORT_ORDER>' --interruption_filter '<INTERRUPTION_FILTER>'`
+
+This example will only show instance with less that 5% chance of being interrupted and ordered by Spot Price ` ./get-spot-prices.sh --sort_order 'SpotPrice' --interruption_filter '<5%'`
 
 ## Other useful links:
 
